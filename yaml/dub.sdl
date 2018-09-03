@@ -1,0 +1,14 @@
+name "yaml"
+description "Universal config with application"
+authors "Maksim Galanin"
+copyright "Copyright (c) 2015-2018, Milofon Project. All rights reserved."
+license "BSD 3-clause"
+
+dependency "uniconf:core" version="*"
+dependency "dyaml" version="~>0.6.3"
+
+targetType "library"
+targetPath "../out"
+sourcePaths "."
+importPaths "."
+
