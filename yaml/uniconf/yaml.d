@@ -15,8 +15,8 @@ private
     import dyaml.node : Node;
     import dyaml.exception : YAMLException;
 
-    import uniconf.loader;
-    import uniconf.exception;
+    import uniconf.core.loader;
+    import uniconf.core.exception;
 }
 
 

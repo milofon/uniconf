@@ -7,7 +7,7 @@
  * Date: 2018-08-16
  */
 
-module uniconf.config;
+module uniconf.core.config;
 
 private
 {
@@ -15,7 +15,7 @@ private
     import std.array : split, appender;
 
     import uninode.core;
-    import uniconf.exception;
+    import uniconf.core.exception;
 }
 
 
@@ -221,10 +221,10 @@ struct Config
      *
      * Example:
      * ---
-     * toArray("services");
+     * getArray("services");
      * ---
      */
-    Config[] toArray(string path)
+    Config[] getArray(string path)
     {
         return getArrayFrom(findNode(path));
     }
@@ -233,10 +233,10 @@ struct Config
     unittest
     {
         mixin(SimpleConfigs);
-        auto arr = root.toArray("arr");
+        auto arr = root.getArray("arr");
         assert(arr.length == 3);
         assert(arr == [Config(3), Config(4), Config(5)]);
-        assert(root.toArray("obj.one").length == 1);
+        assert(root.getArray("obj.one").length == 1);
     }
 
     /**
@@ -244,10 +244,10 @@ struct Config
      *
      * Example
      * ---
-     * node.toArray();
+     * node.getArray();
      * ---
      */
-    Config[] toArray()
+    Config[] getArray()
     {
         return getArrayFrom(&this);
     }
@@ -256,7 +256,7 @@ struct Config
     unittest
     {
         mixin(SimpleConfigs);
-        assert(root.toArray.length == 2);
+        assert(root.getArray("arr").length == 3);
     }
 
     /**
@@ -271,7 +271,7 @@ struct Config
      * toObject();
      * ---
      */
-    Config[string] toObject()
+    Config[string] getObject()
     {
         return getObjectFrom(&this, DEFAULT_FIELD_NAME);
     }
@@ -280,8 +280,8 @@ struct Config
     unittest
     {
         mixin(SimpleConfigs);
-        assert("obj" in root.toObject);
-        assert("arr" in root.toObject);
+        assert("obj" in root.getObject);
+        assert("arr" in root.getObject);
     }
 
     /**
@@ -296,7 +296,7 @@ struct Config
      * toObject();
      * ---
      */
-    Config[string] toObject(string path)
+    Config[string] getObject(string path)
     {
         return getObjectFrom(findNode(path), DEFAULT_FIELD_NAME);
     }
@@ -305,8 +305,8 @@ struct Config
     unittest
     {
         mixin(SimpleConfigs);
-        assert("one" in root.toObject("obj"));
-        assert("two" in root.toObject("obj"));
+        assert("one" in root.getObject("obj"));
+        assert("two" in root.getObject("obj"));
     }
 
     /**
@@ -350,7 +350,7 @@ struct Config
             }
             else if (dst.isArray && src.isArray)
             {
-                dst = Config(dst.toArray ~ src.toArray);
+                dst = Config(dst.getArray ~ src.getArray);
             }
         }
 
@@ -374,6 +374,12 @@ struct Config
         auto res = root ~ root2;
         assert(res.get!Config("arr").length == 4);
         assert(res.get!int("obj.five") == 5);
+    }
+
+
+    string toString()
+    {
+        return _node.toString;
     }
 
 
@@ -428,13 +434,6 @@ private:
         if (node.isArray)
         {
             foreach(ref Config child; cast(UniNodeImpl!Config)*node)
-            {
-                ret.put(child);
-            }
-        }
-        else if (node.isObject)
-        {
-            foreach(key, ref Config child; cast(UniNodeImpl!Config)*node)
                 ret.put(child);
         }
         else

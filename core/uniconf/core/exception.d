@@ -7,14 +7,14 @@
  * Date: 2018-09-03
  */
 
-module uniconf.exception;
+module uniconf.core.exception;
 
 private
 {
     import std.format : fmt = format;
     import std.exception : enforce;
 
-    import uniconf.config : Config;
+    import uniconf.core.config : Config;
 }
 
 

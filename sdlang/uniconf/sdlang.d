@@ -15,8 +15,8 @@ private
 
     import sdlang;
 
-    import uniconf.loader;
-    import uniconf.exception;
+    import uniconf.core.loader;
+    import uniconf.core.exception;
 }
 
 
@@ -142,7 +142,7 @@ logger "console" {
 
     assert("logger.name" in conf);
     assert("logger.level" in conf);
-    assert(conf.toArray("logger.name").length == 2);
+    assert(conf.getArray("logger.name").length == 2);
     assert(conf.get!string("logger.level") == "debugv");
 }
 

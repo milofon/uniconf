@@ -7,11 +7,11 @@
  * Date: 2018-09-03
  */
 
-module uniconf.loader;
+module uniconf.core.loader;
 
 public
 {
-    import uniconf.config : Config;
+    import uniconf.core.config : Config;
 }
 
 private
@@ -19,7 +19,7 @@ private
     import std.path : extension;
     import std.algorithm.searching : canFind;
 
-    import uniconf.exception : ConfigException;
+    import uniconf.core.exception : ConfigException;
 }
 
 

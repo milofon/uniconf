@@ -15,8 +15,8 @@ private
     import std.conv : to;
 
     import properd;
-    import uniconf.loader;
-    import uniconf.exception;
+    import uniconf.core.loader;
+    import uniconf.core.exception;
 }
 
 

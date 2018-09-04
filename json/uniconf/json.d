@@ -14,8 +14,8 @@ private
     import std.file : FileException, readText;
     import std.json;
 
-    import uniconf.loader;
-    import uniconf.exception;
+    import uniconf.core.loader;
+    import uniconf.core.exception;
 }
 
 
