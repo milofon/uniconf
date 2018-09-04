@@ -96,30 +96,14 @@ Config loadConfig(ConfigLoader[] loaders, string fileName)
 alias Loader = Config delegate(string fileName);
 
 
-
-void registerLoader(shared ConfigLoader loader)
-{
-    synchronized {
-        _loaders ~= loader;
-    }
-}
-
-
 /**
  * Create properties loader
  */
-Loader createConfigLoader()
+Loader createConfigLoader(ConfigLoader[] loaders)
 {
-    ConfigLoader[] loaders = cast(ConfigLoader[])_loaders;
     return (string fileName)
     {
         return loadConfig(loaders, fileName);
     };
 }
-
-
-private:
-
-
-shared ConfigLoader[] _loaders;
 
