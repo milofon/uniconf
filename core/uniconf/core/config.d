@@ -416,9 +416,9 @@ private:
 
     inout(T) getOrEnforceFrom(T)(inout(Config)* node, lazy string msg) inout
     {
-        () @trusted { configEnforce(node, msg); } ();
+        () @trusted { enforceConfig(node, msg); } ();
         auto val = getFrom!T(node);
-        () @trusted { configEnforce(!val.isNull, msg); } ();
+        () @trusted { enforceConfig(!val.isNull, msg); } ();
         return val.get;
     }
 
