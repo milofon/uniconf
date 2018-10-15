@@ -1,5 +1,5 @@
 /**
- * JSON Loader
+ * Toml Loader
  *
  * Copyright: (c) 2015-2018, Milofon Project.
  * License: Subject to the terms of the BSD 3-Clause License, as written in the included LICENSE.md file.
@@ -7,22 +7,23 @@
  * Date: 2018-09-03
  */
 
-module uniconf.json;
+module uniconf.toml;
 
 private
 {
     import std.file : FileException, readText;
-    import std.json;
+
+    import toml;
 
     import uniconf.core.loader;
     import uniconf.core.exception;
 }
 
 
-/*
- * The loader data from a JSON file
+/**
+ * The loader data from a .toml file
  */
-class JsonConfigLoader : LangConfigLoader
+class TomlConfigLoader : LangConfigLoader
 {
     Config loadConfigFile(string fileName)
     {
@@ -32,18 +33,19 @@ class JsonConfigLoader : LangConfigLoader
             return loadConfigString(source);
         }
         catch (FileException e)
-            throw new ConfigException("Error loading json from a file '"
+            throw new ConfigException("Error loading toml from a file '"
                     ~ fileName ~ "':", e.file, e.line, e);
     }
 
 
     Config loadConfigString(string data)
     {
-        JSONValue root;
+        TOMLDocument root;
+
         try
-            root = parseJSON(data);
-        catch (JSONException e)
-            throw new ConfigException("Error loading json from a string:",
+            root = parseTOML(data);
+        catch (TOMLParserException e)
+            throw new ConfigException("Error loading toml from string:",
                     e.file, e.line, e);
 
         return toConfig(root);
@@ -52,41 +54,37 @@ class JsonConfigLoader : LangConfigLoader
 
     string[] getExtensions()
     {
-        return [".json"];
+        return [".toml"];
     }
 
 
-    private Config toConfig(JSONValue root)
+    private Config toConfig(TOMLDocument root)
     {
-        Config convert(JSONValue node)
+        Config convert(TOMLValue node)
         {
             switch(node.type)
             {
-                case JSON_TYPE.NULL:
-                    return Config();
-                case JSON_TYPE.TRUE:
+                case TOML_TYPE.TRUE:
                     return Config(true);
-                case JSON_TYPE.FALSE:
+                case TOML_TYPE.FALSE:
                     return Config(false);
-                case JSON_TYPE.INTEGER:
+                case TOML_TYPE.INTEGER:
                     return Config(node.integer);
-                case JSON_TYPE.UINTEGER:
-                    return Config(node.uinteger);
-                case JSON_TYPE.FLOAT:
+                case TOML_TYPE.FLOAT:
                     return Config(node.floating);
-                case JSON_TYPE.STRING:
+                case TOML_TYPE.STRING:
                     return Config(node.str);
-                case JSON_TYPE.ARRAY:
+                case TOML_TYPE.ARRAY:
                 {
                     Config[] arr;
-                    foreach(JSONValue ch; node.array)
+                    foreach(TOMLValue ch; node.array)
                         arr ~= convert(ch);
                     return Config(arr);
                 }
-                case JSON_TYPE.OBJECT:
+                case TOML_TYPE.TABLE:
                 {
                     Config[string] map;
-                    foreach (string key, JSONValue ch; node.object)
+                    foreach (string key, TOMLValue ch; node.table)
                         map[key] = convert(ch);
                     return Config(map);
                 }
@@ -95,7 +93,7 @@ class JsonConfigLoader : LangConfigLoader
             }
         }
 
-        return convert(root);
+        return convert(TOMLValue(root.table));
     }
 }
 
@@ -103,10 +101,16 @@ class JsonConfigLoader : LangConfigLoader
 
 unittest
 {
-    auto loader = new JsonConfigLoader();
-    auto conf = loader.loadConfigString(`{"host": "localhost", "port": 44}`);
-    assert("host" in conf);
-    assert("port" in conf);
-    assert(conf.get!int("port") == 44);
+    auto loader = new TomlConfigLoader();
+    auto conf = loader.loadConfigString(`
+[logger]
+name="console"
+appender="console"
+level="debugv"
+`);
+
+    assert("logger.name" in conf);
+    assert("logger.level" in conf);
+    assert(conf.get!string("logger.level") == "debugv");
 }
 

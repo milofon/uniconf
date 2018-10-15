@@ -26,14 +26,13 @@ enum DEFAULT_FIELD_NAME = "v";
 struct Config
 {
 @safe:
-    UniNodeImpl!Config _node;
-    alias _node this;
+    UniNodeImpl!Config node;
+    alias node this;
 
 
     this(V)(V val) inout
-        if (isUniNodeType!(V, Config))
     {
-        _node = UniNodeImpl!Config(val);
+        node = UniNodeImpl!Config(val);
     }
 
 
@@ -340,7 +339,7 @@ struct Config
 
             if (dst.isObject && src.isObject)
             {
-                foreach (key, ref Config ch; src)
+                foreach (string key, ref Config ch; src)
                 {
                     if (auto tg = key in dst)
                         mergeNode(*tg, ch);
@@ -379,9 +378,8 @@ struct Config
 
     string toString()
     {
-        return _node.toString;
+        return node.toString;
     }
-
 
 private:
 
@@ -394,9 +392,9 @@ private:
         try
         {
             static if (is(T == Config))
-                return inout(Nullable!T)(node.toThis);
+                return inout(Nullable!T)(*node);
             else
-                return inout(Nullable!T)(node._node.get!T);
+                return inout(Nullable!T)(node.node.get!T);
         }
         catch (UniNodeException e)
             return inout(Nullable!T).init;
@@ -425,7 +423,7 @@ private:
     }
 
 
-    Config[] getArrayFrom(inout(Config)* node) inout
+    Config[] getArrayFrom(Config* node) inout
     {
         auto ret = appender!(Config[]);
         if (node is null)
@@ -433,27 +431,27 @@ private:
 
         if (node.isArray)
         {
-            foreach(ref Config child; cast(UniNodeImpl!Config)*node)
+            foreach(ref Config child; *node)
                 ret.put(child);
         }
         else
-            ret.put(cast(Config)((*node).toThis));
+            ret.put(*node);
 
         return ret.data;
     }
 
 
-    Config[string] getObjectFrom(inout(Config)* node, string defKey) inout
+    Config[string] getObjectFrom(Config* node, string defKey) inout
     {
         Config[string] ret;
 
         if (node.isObject)
         {
-            foreach (string key, ref Config child; cast(UniNodeImpl!Config)*node)
+            foreach (string key, ref Config child; *node)
                 ret[key] = child;
         }
         else
-            ret[defKey] = node.toThis;
+            ret[defKey] = *node;
 
         return ret;
     }
@@ -478,7 +476,7 @@ private:
 
             string name = names[0];
             if (node.isObject)
-                if (auto chd = name in (*node)._node)
+                if (auto chd = name in (*node).node)
                     return findPath(chd, names[1..$]);
 
             return null;
@@ -495,9 +493,12 @@ private:
 private:
 
 
-enum SimpleConfigs = q{
-    auto chObj = Config(["one": Config(1), "two": Config(2)]);
-    auto chArr = Config([Config(3), Config(4), Config(5)]);
-    auto root = Config(["obj": chObj, "arr": chArr]);
-};
+version(unittest)
+{
+    enum SimpleConfigs = q{
+        auto chObj = Config(["one": Config(1), "two": Config(2)]);
+        auto chArr = Config([Config(3), Config(4), Config(5)]);
+        auto root = Config(["obj": chObj, "arr": chArr]);
+    };
+}
 

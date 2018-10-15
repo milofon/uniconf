@@ -19,14 +19,14 @@ private
     import std.path : extension;
     import std.algorithm.searching : canFind;
 
-    import uniconf.core.exception : ConfigException;
+    import uniconf.core.exception : ConfigException, enforceConfig;
 }
 
 
 /**
- * Interface config loader
+ * Interface config loader of type
  */
-interface ConfigLoader
+interface LangConfigLoader
 {
     /**
      * Loading properties from a file
@@ -78,9 +78,9 @@ interface ConfigLoader
  * loaders  = Loaders
  * fileName = Path
  */
-Config loadConfig(ConfigLoader[] loaders, string fileName)
+Config loadConfig(LangConfigLoader[] loaders, string fileName)
 {
-    foreach(ConfigLoader loader; loaders)
+    foreach(LangConfigLoader loader; loaders)
         if (loader.isPropertiesFile(fileName))
             return loader.loadConfigFile(fileName);
     throw new ConfigException("Not defined loader for " ~ fileName);
@@ -93,14 +93,15 @@ Config loadConfig(ConfigLoader[] loaders, string fileName)
  *
  * fileName = File name
  */
-alias Loader = Config delegate(string fileName);
+alias ConfigLoader = Config delegate(string fileName);
 
 
 /**
  * Create properties loader
  */
-Loader createConfigLoader(ConfigLoader[] loaders)
+ConfigLoader createConfigLoader(LangConfigLoader[] loaders)
 {
+    enforceConfig(loaders.length, "Loaders is empty");
     return (string fileName)
     {
         return loadConfig(loaders, fileName);

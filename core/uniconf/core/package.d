@@ -10,5 +10,7 @@ module uniconf.core;
 public
 {
     import uniconf.core.config : Config;
+    import uniconf.core.loader;
+    import uniconf.core.exception;
 }
 

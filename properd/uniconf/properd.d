@@ -23,7 +23,7 @@ private
 /**
  * The loader data from a .properties file
  */
-class PropertiesConfigLoader : ConfigLoader
+class PropertiesConfigLoader : LangConfigLoader
 {
     Config loadConfigFile(string fileName)
     {
@@ -130,7 +130,15 @@ private:
                     else
                         return Config(to!long(num));
                 default:
-                    return Config(value);
+                    if (value.length > 1 && value[0] == '[' && value[$-1] == ']')
+                    {
+                        Config[] arr;
+                        foreach (item; value[1..$-1].split(','))
+                            arr ~= convertValue(item);
+                        return Config(arr);
+                    }
+                    else
+                        return Config(value);
             }
         }
     }
@@ -153,7 +161,7 @@ string skipNumber(R)(ref R s, out bool is_float, out bool is_long_overflow)
     if (s[idx] == '-') idx++;
     if (s[idx] == '0') idx++;
     else {
-        configEnforce(isDigit(s[idx]), "Digit expected at beginning of number.");
+        enforceConfig(isDigit(s[idx]), "Digit expected at beginning of number.");
         int_part = s[idx++] - '0';
         while( idx < s.length && isDigit(s[idx]) )
         {
@@ -184,7 +192,7 @@ string skipNumber(R)(ref R s, out bool is_float, out bool is_long_overflow)
         idx++;
         is_float = true;
         if( idx < s.length && (s[idx] == '+' || s[idx] == '-') ) idx++;
-        configEnforce( idx < s.length && isDigit(s[idx]), "Expected exponent." ~ s[0 .. idx]);
+        enforceConfig( idx < s.length && isDigit(s[idx]), "Expected exponent." ~ s[0 .. idx]);
         idx++;
         while( idx < s.length && isDigit(s[idx]) ) idx++;
     }

@@ -23,7 +23,7 @@ private
 /**
  * The loader data from a SDLang file
  */
-class SdlangConfigLoader : ConfigLoader
+class SdlangConfigLoader : LangConfigLoader
 {
 
     Config loadConfigFile(string fileName)
@@ -98,7 +98,7 @@ class SdlangConfigLoader : ConfigLoader
                         if (auto subConf = sub.name in map)
                         {
                             if (subConf.kind == Config.Kind.array)
-                                subConf.appendArrayElement(res);
+                                *subConf ~= res;
                             else
                                 map[sub.name] = Config([*subConf, res]);
                         }

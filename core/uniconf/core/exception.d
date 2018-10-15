@@ -42,5 +42,5 @@ class ConfigNotFoundException : Exception
 }
 
 
-alias configEnforce = enforce!(ConfigException);
+alias enforceConfig = enforce!(ConfigException);
 

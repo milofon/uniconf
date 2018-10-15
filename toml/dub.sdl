@@ -1,0 +1,14 @@
+name "toml"
+description "Universal config with application"
+authors "Maksim Galanin"
+copyright "Copyright (c) 2015-2018, Milofon Project. All rights reserved."
+license "BSD 3-clause"
+
+dependency "uniconf:core" version="*"
+dependency "toml" version="~>1.0.0-rc.3"
+
+targetType "library"
+targetPath "../out"
+sourcePaths "."
+importPaths "."
+

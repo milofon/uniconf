@@ -23,7 +23,7 @@ private
 /**
  * The loader data from a YAML file
  */
-class YamlConfigLoader : ConfigLoader
+class YamlConfigLoader : LangConfigLoader
 {
 
     Config loadConfigFile(string fileName)
