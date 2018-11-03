@@ -25,6 +25,9 @@ private
  */
 class PropertiesConfigLoader : LangConfigLoader
 {
+    /**
+     * Load config from file
+     */
     Config loadConfigFile(string fileName)
     {
         string[string] root;
@@ -38,7 +41,9 @@ class PropertiesConfigLoader : LangConfigLoader
         return toConfig(root);
     }
 
-
+    /**
+     * Load config from string
+     */
     Config loadConfigString(string data)
     {
         string[string] root;
@@ -79,9 +84,17 @@ private:
                 {
                     if (auto chd = name in *current)
                     {
-                        if (names.length == 1)
-                            (*chd)["v"] = val;
+                        if (chd.kind != Config.Kind.object)
+                        {
+                            (*current)[name] = Config(["v": *chd]);
+                        }
                         else
+                        {
+                            if (names.length == 1)
+                                (*chd)["v"] = val;
+                        }
+
+                        if (names.length > 0)
                             setConfig(chd, names[1..$]);
                     }
                     else
@@ -154,21 +167,25 @@ private:
  */
 string skipNumber(R)(ref R s, out bool is_float, out bool is_long_overflow)
 {
-    size_t idx = 0;
+    size_t idx;
+    ulong int_part;
     is_float = false;
     is_long_overflow = false;
-    ulong int_part = 0;
-    if (s[idx] == '-') idx++;
-    if (s[idx] == '0') idx++;
-    else {
+    if (s[idx] == '-')
+        idx++;
+    if (s[idx] == '0')
+        idx++;
+    else
+    {
         enforceConfig(isDigit(s[idx]), "Digit expected at beginning of number.");
         int_part = s[idx++] - '0';
         while( idx < s.length && isDigit(s[idx]) )
         {
             if (!is_long_overflow)
             {
-                auto dig = s[idx] - '0';
-                if ((long.max / 10) > int_part || ((long.max / 10) == int_part && (long.max % 10) >= dig))
+                const dig = s[idx] - '0';
+                if ((long.max / 10) > int_part
+                        || ((long.max / 10) == int_part && (long.max % 10) >= dig))
                 {
                     int_part *= 10;
                     int_part += dig;
@@ -182,17 +199,21 @@ string skipNumber(R)(ref R s, out bool is_float, out bool is_long_overflow)
         }
     }
 
-    if( idx < s.length && s[idx] == '.' ){
+    if (idx < s.length && s[idx] == '.' )
+    {
         idx++;
         is_float = true;
-        while( idx < s.length && isDigit(s[idx]) ) idx++;
+        while (idx < s.length && isDigit(s[idx]))
+            idx++;
     }
 
-    if( idx < s.length && (s[idx] == 'e' || s[idx] == 'E') ){
+    if (idx < s.length && (s[idx] == 'e' || s[idx] == 'E'))
+    {
         idx++;
         is_float = true;
         if( idx < s.length && (s[idx] == '+' || s[idx] == '-') ) idx++;
-        enforceConfig( idx < s.length && isDigit(s[idx]), "Expected exponent." ~ s[0 .. idx]);
+        enforceConfig( idx < s.length && isDigit(s[idx]),
+                "Expected exponent." ~ s[0 .. idx]);
         idx++;
         while( idx < s.length && isDigit(s[idx]) ) idx++;
     }
@@ -211,7 +232,7 @@ bool isDigit(dchar ch) @safe nothrow pure
 
 
 
-unittest
+@system unittest
 {
     auto loader = new PropertiesConfigLoader();
     auto conf = loader.loadConfigString(`

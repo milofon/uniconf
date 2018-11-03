@@ -7,43 +7,13 @@
 
 module uniconf;
 
-private
+public
 {
     import uniconf.core;
-}
-
-
-
-LangConfigLoader[] getAvailableLoaders()
-{
-    LangConfigLoader[] loaders;
-
-    version(Have_uniconf_sdlang)
-    {
-        import uniconf.sdlang;
-        loaders ~= new SdlangConfigLoader();
-    }
-    version (Have_uniconf_properd)
-    {
-        import uniconf.properd;
-        loaders ~= new PropertiesConfigLoader();
-    }
-    version (Have_uniconf_json)
-    {
-        import uniconf.json;
-        loaders ~= new JsonConfigLoader();
-    }
-    version (Have_uniconf_yaml)
-    {
-        import uniconf.yaml;
-        loaders ~= new YamlConfigLoader();
-    }
-    version (Have_uniconf_toml)
-    {
-        import uniconf.toml;
-        loaders ~= new TomlConfigLoader();
-    }
-
-    return loaders;
+    import uniconf.json;
+    import uniconf.properd;
+    import uniconf.sdlang;
+    import uniconf.toml;
+    import uniconf.yaml;
 }
 

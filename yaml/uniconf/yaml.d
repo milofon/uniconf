@@ -25,7 +25,9 @@ private
  */
 class YamlConfigLoader : LangConfigLoader
 {
-
+    /**
+     * Load config from file
+     */
     Config loadConfigFile(string fileName)
     {
         Node root;
@@ -39,7 +41,9 @@ class YamlConfigLoader : LangConfigLoader
         return toConfig(root);
     }
 
-
+    /**
+     * Load config from string
+     */
     Config loadConfigString(string data)
     {
         Node root;
@@ -100,7 +104,7 @@ class YamlConfigLoader : LangConfigLoader
 
 
 
-unittest
+@system unittest
 {
     auto loader = new YamlConfigLoader();
     auto conf = loader.loadConfigString(`

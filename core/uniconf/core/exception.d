@@ -23,6 +23,9 @@ private
  */
 class ConfigException : Exception
 {
+    /**
+     * Construct new ConfigException
+     */
     this(string msg, string file = __FILE__, size_t line = __LINE__, Throwable next = null)
     {
         super(msg ~ ((next !is null) ? "\n" ~ next.msg : ""), file, line, next);
@@ -35,6 +38,9 @@ class ConfigException : Exception
  */
 class ConfigNotFoundException : Exception
 {
+    /**
+     * Construct new ConfigNotFoundException
+     */
     this(Config conf, string name, string file = __FILE__, size_t line = __LINE__)
     {
         super(fmt!"Property '%s' not found (%s)"(name, conf), file, line, null);

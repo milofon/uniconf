@@ -25,6 +25,9 @@ private
  */
 class TomlConfigLoader : LangConfigLoader
 {
+    /**
+     * Load config from file
+     */
     Config loadConfigFile(string fileName)
     {
         try
@@ -37,7 +40,9 @@ class TomlConfigLoader : LangConfigLoader
                     ~ fileName ~ "':", e.file, e.line, e);
     }
 
-
+    /**
+     * Load config from string
+     */
     Config loadConfigString(string data)
     {
         TOMLDocument root;
@@ -99,7 +104,7 @@ class TomlConfigLoader : LangConfigLoader
 
 
 
-unittest
+@system unittest
 {
     auto loader = new TomlConfigLoader();
     auto conf = loader.loadConfigString(`

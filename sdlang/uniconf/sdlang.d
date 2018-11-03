@@ -25,7 +25,9 @@ private
  */
 class SdlangConfigLoader : LangConfigLoader
 {
-
+    /**
+     * Load config from file
+     */
     Config loadConfigFile(string fileName)
     {
         Tag root;
@@ -39,7 +41,9 @@ class SdlangConfigLoader : LangConfigLoader
         return toConfig(root);
     }
 
-
+    /**
+     * Load config from string
+     */
     Config loadConfigString(string data)
     {
         Tag root;
@@ -129,7 +133,7 @@ class SdlangConfigLoader : LangConfigLoader
 
 
 
-unittest
+@system unittest
 {
     auto loader = new SdlangConfigLoader();
     auto conf = loader.loadConfigString(`

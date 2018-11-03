@@ -11,7 +11,7 @@ private
 {
     import dunit;
 
-    import uniconf : getAvailableLoaders;
+    import uniconf : ConfigLoaderMixin;
     import uniconf.core;
 }
 
@@ -26,6 +26,7 @@ class TestLoaders
     @Test
     void testAvailableLoaders()
     {
+        mixin ConfigLoaderMixin!();
         auto loaders = getAvailableLoaders();
         assertEquals(loaders.length, 5);
     }

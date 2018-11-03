@@ -14,3 +14,43 @@ public
     import uniconf.core.exception;
 }
 
+
+/**
+ * Mixin available loaders
+ */
+mixin template ConfigLoaderMixin()
+{
+    private LangConfigLoader[] getAvailableLoaders()
+    {
+        LangConfigLoader[] loaders;
+
+        version(Have_uniconf_sdlang)
+        {
+            import uniconf.sdlang : SdlangConfigLoader;
+            loaders ~= new SdlangConfigLoader();
+        }
+        version (Have_uniconf_properd)
+        {
+            import uniconf.properd : PropertiesConfigLoader;
+            loaders ~= new PropertiesConfigLoader();
+        }
+        version (Have_uniconf_json)
+        {
+            import uniconf.json : JsonConfigLoader;
+            loaders ~= new JsonConfigLoader();
+        }
+        version (Have_uniconf_yaml)
+        {
+            import uniconf.yaml : YamlConfigLoader;
+            loaders ~= new YamlConfigLoader();
+        }
+        version (Have_uniconf_toml)
+        {
+            import uniconf.toml : TomlConfigLoader;
+            loaders ~= new TomlConfigLoader();
+        }
+
+        return loaders;
+    }
+}
+

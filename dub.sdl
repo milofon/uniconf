@@ -20,12 +20,10 @@ subPackage "yaml"
 subPackage "properd"
 subPackage "toml"
 
-
 configuration "library" {
   targetType "library"
   targetName "uniconf"
 }
-
 
 configuration "test" {
   dependency "d-unit" version="~>0.8.1"

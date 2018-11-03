@@ -19,11 +19,14 @@ private
 }
 
 
-/*
+/**
  * The loader data from a JSON file
  */
 class JsonConfigLoader : LangConfigLoader
 {
+    /**
+     * Load config from file
+     */
     Config loadConfigFile(string fileName)
     {
         try
@@ -36,7 +39,9 @@ class JsonConfigLoader : LangConfigLoader
                     ~ fileName ~ "':", e.file, e.line, e);
     }
 
-
+    /**
+     * Load config from string
+     */
     Config loadConfigString(string data)
     {
         JSONValue root;
@@ -101,7 +106,7 @@ class JsonConfigLoader : LangConfigLoader
 
 
 
-unittest
+@system unittest
 {
     auto loader = new JsonConfigLoader();
     auto conf = loader.loadConfigString(`{"host": "localhost", "port": 44}`);

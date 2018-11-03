@@ -18,25 +18,42 @@ private
     import uniconf.core.exception;
 }
 
-
+/**
+ * Delimiter char for config path
+ */
 enum DELIMITER_CHAR = '.';
+/**
+ * Default value for not object value
+ */
 enum DEFAULT_FIELD_NAME = "v";
 
 
+/**
+ * Implementation Config
+ */
 struct Config
 {
 @safe:
+    /**
+     *Internal implementation UniNodeImpl
+     */
     UniNodeImpl!Config node;
+
     alias node this;
 
-
+    /**
+     * Construct Config from val
+     *
+     * Params:
+     * val = value
+     */
     this(V)(V val) inout
     {
         node = UniNodeImpl!Config(val);
     }
 
 
-    unittest
+    @safe unittest
     {
         auto c = Config(1);
         auto ic = immutable(Config)(1);
@@ -58,7 +75,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         auto node = Config(1);
         assert(node.get!string.isNull);
@@ -84,7 +101,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         mixin(SimpleConfigs);
         assert(root.get!int("obj.one") == 1);
@@ -103,7 +120,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         auto node = Config(1);
 
@@ -122,7 +139,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         mixin(SimpleConfigs);
         assert(root.getOrEnforce!int("obj.one", "not found") == 1);
@@ -153,7 +170,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         auto node = Config(1);
         assert(node.getOrElse!int(2) == 1);
@@ -180,7 +197,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         mixin(SimpleConfigs);
         assert(root.getOrElse!int("obj.one", 2) == 1);
@@ -203,7 +220,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         mixin(SimpleConfigs);
         assert("obj.one" in root);
@@ -229,7 +246,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         mixin(SimpleConfigs);
         auto arr = root.getArray("arr");
@@ -252,7 +269,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         mixin(SimpleConfigs);
         assert(root.getArray("arr").length == 3);
@@ -276,7 +293,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         mixin(SimpleConfigs);
         assert("obj" in root.getObject);
@@ -301,7 +318,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         mixin(SimpleConfigs);
         assert("one" in root.getObject("obj"));
@@ -360,7 +377,7 @@ struct Config
     }
 
 
-    unittest
+    @safe unittest
     {
         mixin(SimpleConfigs);
         auto node = Config(["five": Config(5)]);
@@ -376,10 +393,11 @@ struct Config
     }
 
 
-    string toString()
+    string toString() const
     {
         return node.toString;
     }
+
 
 private:
 
@@ -474,7 +492,7 @@ private:
             if(names.length == 0)
                 return node;
 
-            string name = names[0];
+            immutable name = names[0];
             if (node.isObject)
                 if (auto chd = name in (*node).node)
                     return findPath(chd, names[1..$]);
