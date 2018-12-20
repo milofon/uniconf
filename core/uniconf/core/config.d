@@ -462,6 +462,8 @@ private:
     Config[string] getObjectFrom(Config* node, string defKey) inout
     {
         Config[string] ret;
+        if (node is null)
+            return ret;
 
         if (node.isObject)
         {
