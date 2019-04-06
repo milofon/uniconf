@@ -96,8 +96,6 @@ class SdlangConfigLoader : LangConfigLoader
                     foreach(Tag sub; tag.tags)
                     {
                         Config res = convert(sub);
-                        if (res.kind == Config.Kind.nil)
-                            continue;
 
                         if (auto subConf = sub.name in map)
                         {
