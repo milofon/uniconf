@@ -33,7 +33,7 @@ class YamlConfigLoader : LangConfigLoader
         Node root;
 
         try
-            root = Loader(fileName).load();
+            root = Loader.fromFile(fileName).load();
         catch(YAMLException e)
             throw new ConfigException("Error loading yaml from a file '"
                     ~ fileName ~ "':", e.file, e.line, e);
@@ -49,7 +49,7 @@ class YamlConfigLoader : LangConfigLoader
         Node root;
 
         try
-            root = Loader((cast(ubyte[])data).dup).load();
+            root = Loader.fromString(data.dup).load();
         catch(YAMLException e)
             throw new ConfigException("Error loading yaml from a string:",
                     e.file, e.line, e);
