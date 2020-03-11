@@ -188,6 +188,8 @@ client:
     assert (conf.get!int("client.port") == 404);
     assert (conf.get!string("client.host") == "localhost");
     const yml = saveYaml(conf);
-    assert (yml.length > yamlSrc.length);
+    conf = parseYaml!UniTree(yml);
+    assert (conf.get!int("client.port") == 404);
+    assert (conf.get!string("client.host") == "localhost");
 }
 
