@@ -1,14 +1,22 @@
 name "sdlang"
 description "Universal config with application"
 authors "Maksim Galanin"
-copyright "Copyright (c) 2015-2018, Milofon Project. All rights reserved."
+copyright "Copyright (c) 2015-2020, Milofon Project. All rights reserved."
 license "BSD 3-clause"
 
 dependency "uniconf:core" version="*"
-dependency "sdlang-d" version="~>0.10.4"
+dependency "sdlang-d" version="~>0.10.5"
 
-targetType "library"
 targetPath "../out"
 sourcePaths "."
 importPaths "."
+
+configuration "library" {
+	targetType "library"
+}
+
+configuration "unittest" {
+	dependency "silly" version="~>1.0.1"
+	targetType "library"
+}
 

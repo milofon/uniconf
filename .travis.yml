@@ -1,0 +1,17 @@
+language: d
+
+sudo: false
+
+d:
+  - dmd
+  - ldc
+
+os:
+  - linux
+
+script:
+  - dub build --build=release --config=library
+  - dub test uniconf:core
+  - dub test uniconf:sdlang
+  - dub test uniconf:yaml
+

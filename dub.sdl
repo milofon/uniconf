@@ -1,36 +1,22 @@
 name "uniconf"
 description "Universal config with application"
 authors "Maksim Galanin"
-copyright "Copyright (c) 2015-2018, Milofon Project. All rights reserved."
+copyright "Copyright (c) 2015-2020, Milofon Project. All rights reserved."
 license "BSD 3-clause"
 
 targetPath "out"
 
-dependency ":core" version="*"
-dependency ":json" version="*"
-dependency ":sdlang" version="*"
-dependency ":yaml" version="*"
-dependency ":properd" version="*"
-dependency ":toml" version="*"
-
 subPackage "core"
-subPackage "json"
+dependency ":core" version="*"
+
 subPackage "sdlang"
+dependency ":sdlang" version="*"
+
 subPackage "yaml"
-subPackage "properd"
-subPackage "toml"
+dependency ":yaml" version="*"
+
 
 configuration "library" {
-  targetType "library"
-  targetName "uniconf"
-}
-
-configuration "test" {
-  dependency "d-unit" version="~>0.8.1"
-  targetType "executable"
-
-  versions "UnitTestVersion"
-
-  sourcePaths "test"
+	targetType "library"
 }
 
