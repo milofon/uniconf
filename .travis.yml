@@ -3,8 +3,8 @@ language: d
 sudo: false
 
 d:
-  - dmd
-  - ldc
+  - dmd-2.090.1
+  - ldc-1.20.0 # D v2.090.1
 
 os:
   - linux
