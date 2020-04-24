@@ -6,7 +6,7 @@ license "BSD 3-clause"
 
 dflags "-preview=dip25"
 
-dependency "uninode" version="~>0.2.3"
+dependency "uninode" version="~>0.3.1"
 
 targetPath "../out"
 sourcePaths "."
