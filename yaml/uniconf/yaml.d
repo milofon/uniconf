@@ -11,7 +11,7 @@ module uniconf.yaml;
 
 private
 {
-    import std.array : appender;
+    import std.array : appender, replace;
     import std.datetime.systime : SysTime;
     import std.datetime : DateTimeException;
 
@@ -19,6 +19,7 @@ private
     import dyaml.node : Node, NodeType;
     import dyaml.exception : YAMLException;
     import dyaml.dumper : dumper;
+    import dyaml.style : ScalarStyle;
 
     import uniconf.core : UniConfException;
     import uninode.node : isUniNode;
@@ -53,7 +54,12 @@ UniConf toUniConf(UniConf)(auto ref const Node root) @safe
             case NodeType.timestamp:
                 return UniConf(node.get!SysTime.toISOExtString);
             case NodeType.string:
+            {
+                auto style = __traits(getMember,  node, "scalarStyle");
+                if (style == ScalarStyle.folded)
+                    return UniConf(node.get!string.replace("\n", " "));
                 return UniConf(node.get!string);
+            }
             case NodeType.mapping:
             {
                 UniConf[string] map;
